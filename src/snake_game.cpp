@@ -1,8 +1,8 @@
-#include "snake_game.h"
+#include "headerFiles/snake_game.h"
 
 namespace SnakeGame
 {
-
+    const int SnakeGame::GetScore() { return this->score; }
     const int SnakeGame::GetMapHeight() { return this->map_height; }
     const int SnakeGame::GetMapWidth() { return this->map_width; }
     const int SnakeGame::GetSnakeLength() { return this->snake_body.size(); }
@@ -10,36 +10,50 @@ namespace SnakeGame
 
     SnakeGame::SnakeGame(const float &snake_speed, const bool &map_loops,
                          const int &map_height, const int &map_width)
+        : map_height(map_height), map_width(map_width),
+          map_loops(map_loops), snake_speed(snake_speed)
     {
-        this->map_loops = map_loops;
-        this->map_height = map_height;
-        this->map_width = map_width;
-        this->snake_speed = snake_speed;
-        this->snake_body.push_back(&SnakeNode(map_height / 2, map_width / 2));
+        this->snake_body.push_back(new SnakeNode(map_height / 2, map_width / 2));
+        snake_body[0]->bkg_color = Colors::GREEN_BKG;
+        food = new Food(this->map_height, this->map_width);
+        this->food->Respawn();
+        renderer = new Renderer(this->map_width, this->map_height,
+                                1, ConsoleRenderer::Colors::YELLOW_BKG);
     }
 
     SnakeGame::SnakeGame(const float &snake_speed, const bool &map_loops)
+        : map_loops(map_loops), snake_speed(snake_speed)
     {
-        this->map_loops = map_loops;
-        this->snake_speed = snake_speed;
-        this->snake_body.push_back(&SnakeNode(map_height / 2, map_width / 2));
+        this->snake_body.push_back(new SnakeNode(map_height / 2, map_width / 2));
+        snake_body[0]->bkg_color = Colors::GREEN_BKG;
+        food = new Food(this->map_height, this->map_width);
+        this->food->Respawn();
+        renderer = new Renderer(this->map_width, this->map_height,
+                                1, ConsoleRenderer::Colors::YELLOW_BKG);
     }
 
-    SnakeGame::SnakeGame(const float &snake_speed)
+    SnakeGame::SnakeGame(const float &snake_speed) : snake_speed(snake_speed)
     {
-        this->snake_speed = snake_speed;
-        this->snake_body.push_back(&SnakeNode(map_height / 2, map_width / 2));
+        this->snake_body.push_back(new SnakeNode(map_height / 2, map_width / 2));
+        snake_body[0]->bkg_color = Colors::GREEN_BKG;
+        food = new Food(this->map_height, this->map_width);
+        this->food->Respawn();
+        renderer = new Renderer(this->map_width, this->map_height,
+                                1, ConsoleRenderer::Colors::YELLOW_BKG);
     }
 
     SnakeGame::~SnakeGame()
     {
-        for(int i = 0; i < snake_body.size(); i++)
+        for (int i = 0; i < snake_body.size(); i++)
             delete snake_body[i];
+        delete food;
+        delete renderer;
     }
 
-    void SnakeGame::ChangeDirection(const Direction &newDirection)
+    void SnakeGame::ChangeDirection(const Direction &new_direction)
     {
-        this->direction = newDirection;
+        if (new_direction + direction != 0)
+            this->direction = new_direction;
     }
 
     const bool SnakeGame::Move()
@@ -83,16 +97,17 @@ namespace SnakeGame
             return false;
 
         SnakeNode *tempNode = snake_body.back();
-        if (&tempNode->filled)
+        if (!&tempNode->filled)
         {
             snake_body.pop_back();
             tempNode->pos_x = newPosX;
             tempNode->pos_y = newPosY;
         }
         else
+        {
             tempNode->filled = false;
-
-        tempNode = new SnakeNode(newPosX, newPosY);
+            tempNode = new SnakeNode(newPosX, newPosY);
+        }
         snake_body.push_back(tempNode);
 
         for (int i = 1; i < snake_body.size(); i++)
@@ -101,9 +116,10 @@ namespace SnakeGame
                 return false;
         }
 
-        if (food.pos_x == snake_body.front()->pos_x && food.pos_y == snake_body.front()->pos_y)
+        if (food->pos_x == snake_body.front()->pos_x && food->pos_y == snake_body.front()->pos_y)
         {
             snake_body.front()->filled = true;
+            food->Respawn();
         }
 
         return true;
