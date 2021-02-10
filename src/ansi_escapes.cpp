@@ -16,6 +16,7 @@
 namespace ConsoleRenderer
 {
 
+
 #ifdef _WIN32
 // Some old MinGW/CYGWIN distributions don't define this:
 #ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
@@ -25,7 +26,7 @@ namespace ConsoleRenderer
     static HANDLE stdoutHandle, stdinHandle;
     static DWORD outModeInit, inModeInit;
 
-    void setupConsole(void)
+    void AnsiEscapes::SetupConsole(void)
     {
         DWORD outMode = 0, inMode = 0;
         stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -56,7 +57,7 @@ namespace ConsoleRenderer
         }
     }
 
-    void restoreConsole(void)
+    void AnsiEscapes::RestoreConsole(void)
     {
         // Reset colors
         printf("\x1b[0m");
@@ -72,7 +73,7 @@ namespace ConsoleRenderer
     static struct termios orig_term;
     static struct termios new_term;
 
-    void setupConsole(void)
+    void AnsiEscapes::SetupConsole(void)
     {
         tcgetattr(STDIN_FILENO, &orig_term);
         new_term = orig_term;
@@ -82,7 +83,7 @@ namespace ConsoleRenderer
         tcsetattr(STDIN_FILENO, TCSANOW, &new_term);
     }
 
-    void restoreConsole(void)
+    void AnsiEscapes::RestoreConsole(void)
     {
         // Reset colors
         printf("\x1b[0m");
@@ -92,7 +93,7 @@ namespace ConsoleRenderer
     }
 #endif
 
-    void getCursorPosition(int *row, int *col)
+    void AnsiEscapes::GetCursorPosition(int *row, int *col)
     {
         printf("\x1b[6n");
         char buff[128];

@@ -37,97 +37,101 @@ namespace ConsoleRenderer
         CLEAR_ALL
     };
 
-    void setupConsole(void);
-    void restoreConsole(void);
-    void getCursorPosition(int *row, int *col);
-
-    static inline void setTextColor(int code)
+    class AnsiEscapes
     {
-        printf("\x1b[%dm", code);
-    }
+    public:
+        static void SetupConsole(void);
+        static void RestoreConsole(void);
+        static void GetCursorPosition(int *row, int *col);
 
-    static inline void setTextColorBright(int code)
-    {
-        printf("\x1b[%d;1m", code);
-    }
+        static inline void SetTextColor(int code)
+        {
+            printf("\x1b[%dm", code);
+        }
 
-    static inline void setBackgroundColor(int code)
-    {
-        printf("\x1b[%dm", code);
-    }
+        static inline void SetTextColorBright(int code)
+        {
+            printf("\x1b[%d;1m", code);
+        }
 
-    static inline void setBackgroundColorBright(int code)
-    {
-        printf("\x1b[%d;1m", code);
-    }
+        static inline void SetBackgroundColor(int code)
+        {
+            printf("\x1b[%dm", code);
+        }
 
-    static inline void resetColor(void)
-    {
-        printf("\x1b[%dm", RESET_COLOR);
-    }
+        static inline void SetBackgroundColorBright(int code)
+        {
+            printf("\x1b[%d;1m", code);
+        }
 
-    static inline void clearScreen(void)
-    {
-        printf("\x1b[%dJ", CLEAR_ALL);
-    }
+        static inline void ResetColor(void)
+        {
+            printf("\x1b[%dm", RESET_COLOR);
+        }
 
-    static inline void clearScreenToBottom(void)
-    {
-        printf("\x1b[%dJ", CLEAR_FROM_CURSOR_TO_END);
-    }
+        static inline void ClearScreen(void)
+        {
+            printf("\x1b[%dJ", CLEAR_ALL);
+        }
 
-    static inline void clearScreenToTop(void)
-    {
-        printf("\x1b[%dJ", CLEAR_FROM_CURSOR_TO_BEGIN);
-    }
+        static inline void ClearScreenToBottom(void)
+        {
+            printf("\x1b[%dJ", CLEAR_FROM_CURSOR_TO_END);
+        }
 
-    static inline void clearLine(void)
-    {
-        printf("\x1b[%dK", CLEAR_ALL);
-    }
+        static inline void ClearScreenToTop(void)
+        {
+            printf("\x1b[%dJ", CLEAR_FROM_CURSOR_TO_BEGIN);
+        }
 
-    static inline void clearLineToRight(void)
-    {
-        printf("\x1b[%dK", CLEAR_FROM_CURSOR_TO_END);
-    }
+        static inline void ClearLine(void)
+        {
+            printf("\x1b[%dK", CLEAR_ALL);
+        }
 
-    static inline void clearLineToLeft(void)
-    {
-        printf("\x1b[%dK", CLEAR_FROM_CURSOR_TO_BEGIN);
-    }
+        static inline void ClearLineToRight(void)
+        {
+            printf("\x1b[%dK", CLEAR_FROM_CURSOR_TO_END);
+        }
 
-    static inline void moveUp(int positions)
-    {
-        printf("\x1b[%dA", positions);
-    }
+        static inline void ClearLineToLeft(void)
+        {
+            printf("\x1b[%dK", CLEAR_FROM_CURSOR_TO_BEGIN);
+        }
 
-    static inline void moveDown(int positions)
-    {
-        printf("\x1b[%dB", positions);
-    }
+        static inline void MoveUp(int positions)
+        {
+            printf("\x1b[%dA", positions);
+        }
 
-    static inline void moveRight(int positions)
-    {
-        printf("\x1b[%dC", positions);
-    }
+        static inline void MoveDown(int positions)
+        {
+            printf("\x1b[%dB", positions);
+        }
 
-    static inline void moveLeft(int positions)
-    {
-        printf("\x1b[%dD", positions);
-    }
+        static inline void MoveRight(int positions)
+        {
+            printf("\x1b[%dC", positions);
+        }
 
-    static inline void moveCursorTo(int row, int col)
-    {
-        printf("\x1b[%d;%df", row, col);
-    }
+        static inline void MoveLeft(int positions)
+        {
+            printf("\x1b[%dD", positions);
+        }
 
-    static inline void saveCursorPosition(void)
-    {
-        printf("\x1b%d", 7);
-    }
+        static inline void MoveCursorTo(int row, int col)
+        {
+            printf("\x1b[%d;%df", row, col);
+        }
 
-    static inline void restoreCursorPosition(void)
-    {
-        printf("\x1b%d", 8);
-    }
+        static inline void SaveCursorPosition(void)
+        {
+            printf("\x1b%d", 7);
+        }
+
+        static inline void RestoreCursorPosition(void)
+        {
+            printf("\x1b%d", 8);
+        }
+    };
 } // namespace ConsoleRenderer

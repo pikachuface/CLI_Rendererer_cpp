@@ -3,7 +3,7 @@
 #include <iostream>
 int main()
 {
-    ConsoleRenderer::clearScreen();
+    ConsoleRenderer::AnsiEscapes::ClearScreen();
     ConsoleRenderer::Renderer *rn = new Renderer(10, 20, 2, ConsoleRenderer::Colors::WHITE_BKG);
     ConsoleRenderer::RenderableObject object(1, 1, ConsoleRenderer::Colors::RED_BKG);
     rn->TryAddToRenderQueue(object);
@@ -15,7 +15,7 @@ int main()
     rn->AddToRenderQueue(object);
     rn->AddToDeleteQueue(1,1);
     rn->Render();
-    ConsoleRenderer::moveCursorTo(25, 5);
+    ConsoleRenderer::AnsiEscapes::MoveCursorTo(25, 5);
 
     return 0;
 }
