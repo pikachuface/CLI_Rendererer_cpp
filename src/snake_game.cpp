@@ -17,28 +17,7 @@ namespace SnakeGame
         snake_body[0]->bkg_color = Colors::GREEN_BKG;
         food = new Food(this->map_height, this->map_width);
         this->food->Respawn();
-        renderer = new Renderer(this->map_width, this->map_height,
-                                1, ConsoleRenderer::Colors::YELLOW_BKG);
-    }
-
-    SnakeGame::SnakeGame(const float &snake_speed, const bool &map_loops)
-        : map_loops(map_loops), snake_speed(snake_speed)
-    {
-        this->snake_body.push_back(new SnakeNode(map_height / 2, map_width / 2));
-        snake_body[0]->bkg_color = Colors::GREEN_BKG;
-        food = new Food(this->map_height, this->map_width);
-        this->food->Respawn();
-        renderer = new Renderer(this->map_width, this->map_height,
-                                1, ConsoleRenderer::Colors::YELLOW_BKG);
-    }
-
-    SnakeGame::SnakeGame(const float &snake_speed) : snake_speed(snake_speed)
-    {
-        this->snake_body.push_back(new SnakeNode(map_height / 2, map_width / 2));
-        snake_body[0]->bkg_color = Colors::GREEN_BKG;
-        food = new Food(this->map_height, this->map_width);
-        this->food->Respawn();
-        renderer = new Renderer(this->map_width, this->map_height,
+        renderer = new Renderer(this->map_width, this->map_height, 2,
                                 1, ConsoleRenderer::Colors::YELLOW_BKG);
     }
 

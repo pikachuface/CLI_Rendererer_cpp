@@ -44,8 +44,6 @@ namespace SnakeGame
         const int GetSnakeLength();
         const float GetSnakeSpeed();
         //Constructors | Destructors
-        SnakeGame(const float &speed);
-        SnakeGame(const float &speed, const bool &map_loops);
         SnakeGame(const float &speed, const bool &map_loops,
                   const int &map_Height, const int &map_width);
         ~SnakeGame();
