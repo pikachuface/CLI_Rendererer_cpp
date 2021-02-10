@@ -12,7 +12,7 @@ namespace SnakeGame
 
         bool operator==(const SnakeNode &second)
         {
-            if (this->pos_x == second.pos_x && this->pos_y == second.pos_y)
+            if (this->pos.x == second.pos.x && this->pos.y == second.pos.y)
                 return true;
             else
                 return false;

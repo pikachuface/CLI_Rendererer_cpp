@@ -16,8 +16,8 @@ namespace SnakeGame
     void Food::Respawn()
     {
         this->value = rand() % 10 + 1;
-        this->pos_x = rand() % this->map_width + 1;
-        this->pos_y = rand() % this->map_height + 1;
+        this->pos.x = rand() % this->map_width + 1;
+        this->pos.y = rand() % this->map_height + 1;
     }
 
     const int &Food::GetValue()

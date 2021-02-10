@@ -1,12 +1,12 @@
 #pragma once
 #include "ansi_escapes.h"
+#include "position.h"
 namespace ConsoleRenderer
 {
     class RenderableObject
     {
     public:
-        int pos_x;
-        int pos_y;
+        Position pos;
         Colors bkg_color;
         Colors txt_color = Colors::WHITE_TXT;
         char block_texture[2] = {' ', ' '};

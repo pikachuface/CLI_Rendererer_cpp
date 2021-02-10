@@ -60,8 +60,8 @@ namespace SnakeGame
     {
         bool outsideMap = false;
 
-        int newPosX = snake_body[0]->pos_x;
-        int newPosY = snake_body[0]->pos_y;
+        int newPosX = snake_body[0]->pos.x;
+        int newPosY = snake_body[0]->pos.y;
 
         if (this->direction == Direction::Left)
             newPosX--;
@@ -100,8 +100,8 @@ namespace SnakeGame
         if (!&tempNode->filled)
         {
             snake_body.pop_back();
-            tempNode->pos_x = newPosX;
-            tempNode->pos_y = newPosY;
+            tempNode->pos.x = newPosX;
+            tempNode->pos.y = newPosY;
         }
         else
         {
@@ -116,7 +116,7 @@ namespace SnakeGame
                 return false;
         }
 
-        if (food->pos_x == snake_body.front()->pos_x && food->pos_y == snake_body.front()->pos_y)
+        if (food->pos.x == snake_body.front()->pos.x && food->pos.y == snake_body.front()->pos.y)
         {
             snake_body.front()->filled = true;
             food->Respawn();
