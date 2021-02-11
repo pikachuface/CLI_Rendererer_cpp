@@ -9,6 +9,7 @@ namespace ConsoleRenderer
           text_lines(text_lines)
     {
         AnsiEscapes::SetupConsole();
+        text_boxes.resize(text_lines);
     }
 
     Renderer::Renderer(const size_t &canvas_width,
@@ -23,6 +24,7 @@ namespace ConsoleRenderer
           border_color(border_color)
     {
         AnsiEscapes::SetupConsole();
+        text_boxes.resize(text_lines);
     }
 
     Renderer::~Renderer()
@@ -46,6 +48,11 @@ namespace ConsoleRenderer
     {
         ClearCanvas();
         ShowBorder();
+        std::map<std::string, int>::iterator it;
+        for (it = text_box_finder.begin(); it != text_box_finder.end(); it++)
+        {
+            TryRenderTextBox(it->first);
+        }
         Render();
     }
 
@@ -129,13 +136,29 @@ namespace ConsoleRenderer
     void Renderer::ClearPixel(const Position &to_delete)
     {
         AnsiEscapes::SetBackgroundColor(Colors::RESET_COLOR);
-        AnsiEscapes::MoveCursorTo(text_lines + border_thicknes + to_delete.y, (border_thicknes + to_delete.y * 2) + 1);
+        AnsiEscapes::MoveCursorTo(text_lines + border_thicknes + to_delete.y, (border_thicknes + to_delete.y) * 2 - 1);
         printf("  ");
     }
 
-    void Renderer::UpdateTextBox(const std::string &name)
+    const bool Renderer::TryRenderTextBox(const std::string &name)
     {
+        if (text_box_finder.count(name) > 0)
+        {
+            TextBox *txt_box = text_boxes[text_box_finder[name]];
+            AnsiEscapes::SetBackgroundColor(Colors::RESET_COLOR);
+            int white_spaces = (border_thicknes * 2 + canvas_width) * 2 - (txt_box->label.length() + txt_box->text.length());
+            if (white_spaces > 0)
+                AnsiEscapes::MoveCursorTo(text_box_finder[name], white_spaces / 2 + 1);
+            else
+                AnsiEscapes::MoveCursorTo(text_box_finder[name], 1);
 
+            AnsiEscapes::SetTextColor(txt_box->label_color);
+            printf("%s", txt_box->label.c_str());
+            AnsiEscapes::SetTextColor(txt_box->text_color);
+            printf("%s", txt_box->text.c_str());
+            return true;
+        }
+        return false;
     }
 
     //Queues
@@ -187,15 +210,32 @@ namespace ConsoleRenderer
         return nullptr;
     }
 
-    //TODO: Make it work!!
-    //needs to write to @text_box_helper and @text_boxes
     const bool Renderer::TryAddTextBox(const std::string &name, const std::string &label,
                                        const std::string &text, const Colors &label_color,
                                        const Colors &text_color)
     {
         if (text_box_finder.count(name) == 0)
         {
-            text_boxes[text_box_finder[name]] = new TextBox(label, text, label_color, text_color);
+            for (size_t i = 0; i < text_lines; i++)
+            {
+                if (text_boxes[i] == nullptr)
+                {
+                    text_box_finder[name] = i;
+                    text_boxes[i] = new TextBox(label, text, label_color, text_color);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    const bool Renderer::TryAddTextBox(const std::string &name, const std::string &label,
+                                       const std::string &text, const Colors &label_color,
+                                       const Colors &text_color, const size_t &line)
+    {
+        if (text_box_finder.count(name) == 0)
+        {
+            text_box_finder[name] = line;
+            text_boxes[line] = new TextBox(label, text, label_color, text_color);
         }
         return false;
     }

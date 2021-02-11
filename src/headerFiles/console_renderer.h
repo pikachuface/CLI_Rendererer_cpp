@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <assert.h>
 //custom libs
 #include "renderable_object.h"
 #include "text_box.h"
@@ -37,9 +38,15 @@ namespace ConsoleRenderer
                                  const std::string &text,
                                  const Colors &label_color,
                                  const Colors &text_color);
-        const bool TryDeleteTextBox(const std::string &name);                                 
+        const bool TryAddTextBox(const std::string &name,
+                                 const std::string &label,
+                                 const std::string &text,
+                                 const Colors &label_color,
+                                 const Colors &text_color,
+                                 const size_t &line);
+        const bool TryDeleteTextBox(const std::string &name);
         TextBox *const GetTextBox(const std::string &name);
-        void UpdateTextBox(const std::string &name);
+        const bool TryRenderTextBox(const std::string &name);
         void Render(void);
         void Init(void);
         void ShowBorder(void);
