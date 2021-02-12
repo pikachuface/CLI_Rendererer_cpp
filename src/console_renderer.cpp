@@ -29,15 +29,11 @@ namespace ConsoleRenderer
 
     Renderer::~Renderer()
     {
-        for (size_t i = 0; render_queue.size(); i++)
-        {
-            delete render_queue[i];
-        }
-        for (size_t i = 0; delete_queue.size(); i++)
+        for (size_t i = 0; i < delete_queue.size(); i++)
         {
             delete delete_queue[i];
         }
-        for (size_t i = 0; text_boxes.size(); i++)
+        for (size_t i = 0; i < text_boxes.size(); i++)
         {
             delete text_boxes[i];
         }
@@ -46,7 +42,8 @@ namespace ConsoleRenderer
     //Setup
     void Renderer::Init(void)
     {
-        ClearCanvas();
+        ConsoleRenderer::AnsiEscapes::ClearScreen();
+        //ClearCanvas();
         ShowBorder();
         std::map<std::string, int>::iterator it;
         for (it = text_box_finder.begin(); it != text_box_finder.end(); it++)
@@ -144,13 +141,17 @@ namespace ConsoleRenderer
     {
         if (text_box_finder.count(name) > 0)
         {
-            TextBox *txt_box = text_boxes[text_box_finder[name]];
             AnsiEscapes::SetBackgroundColor(Colors::RESET_COLOR);
+            AnsiEscapes::MoveCursorTo(text_box_finder[name]+1, 1);
+            AnsiEscapes::ClearLineToRight();
+
+            TextBox *txt_box = text_boxes[text_box_finder[name]];
+
             int white_spaces = (border_thicknes * 2 + canvas_width) * 2 - (txt_box->label.length() + txt_box->text.length());
-            if (white_spaces > 0)
-                AnsiEscapes::MoveCursorTo(text_box_finder[name], white_spaces / 2 + 1);
+            if (white_spaces > 0 && txt_box->conetered)
+                AnsiEscapes::MoveCursorTo(text_box_finder[name]+1, white_spaces / 2 + 1);
             else
-                AnsiEscapes::MoveCursorTo(text_box_finder[name], 1);
+                AnsiEscapes::MoveCursorTo(text_box_finder[name]+1, 1);
 
             AnsiEscapes::SetTextColor(txt_box->label_color);
             printf("%s", txt_box->label.c_str());
@@ -162,15 +163,15 @@ namespace ConsoleRenderer
     }
 
     //Queues
-    void Renderer::AddToRenderQueue(const RenderableObject &to_render)
+    void Renderer::AddToRenderQueue(const RenderableObject *to_render)
     {
-        render_queue.push_back(&to_render);
+        render_queue.push_back(to_render);
     }
 
-    const bool Renderer::TryAddToRenderQueue(const RenderableObject &to_render)
+    const bool Renderer::TryAddToRenderQueue(const RenderableObject *to_render)
     {
-        if (InsideCanvas(to_render.pos))
-            render_queue.push_back(&to_render);
+        if (InsideCanvas(to_render->pos))
+            render_queue.push_back(to_render);
         return true;
     }
 

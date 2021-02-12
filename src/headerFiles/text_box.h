@@ -11,6 +11,7 @@ namespace ConsoleRenderer
         Colors text_color = Colors::WHITE_TXT;
         std::string label;
         std::string text;
+        bool conetered = false;
 
     public:
         TextBox(const std::string &label, const std::string &text);

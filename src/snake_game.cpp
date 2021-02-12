@@ -13,12 +13,19 @@ namespace SnakeGame
         : map_height(map_height), map_width(map_width),
           map_loops(map_loops), snake_speed(snake_speed)
     {
-        this->snake_body.push_back(new SnakeNode(map_height / 2, map_width / 2));
+        this->snake_body.push_back(new SnakeNode(round(map_width / 2),round(map_height / 2)));
         snake_body[0]->bkg_color = Colors::GREEN_BKG;
         food = new Food(this->map_height, this->map_width);
         this->food->Respawn();
         renderer = new Renderer(this->map_width, this->map_height, 2,
                                 1, ConsoleRenderer::Colors::YELLOW_BKG);
+        renderer->TryAddTextBox("score", "Score: ", std::to_string(score),
+                                Colors::WHITE_TXT, Colors::YELLOW_TXT);
+        renderer->TryAddTextBox("speed", "Speed: ", std::to_string(snake_speed),
+                                Colors::WHITE_TXT, Colors::BLUE_TXT);
+        renderer->AddToRenderQueue(snake_body[0]);
+        renderer->AddToRenderQueue(food);
+        renderer->Init();
     }
 
     SnakeGame::~SnakeGame()
