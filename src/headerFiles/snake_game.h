@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <queue>
 #include "snake_node.h"
 #include "food.h"
 #include "console_renderer.h"
@@ -24,7 +25,7 @@ namespace SnakeGame
         int map_width = 10;
         bool map_loops = true;
         //Snake variables
-        std::vector<SnakeNode *> snake_body;
+        std::deque<SnakeNode *> snake_body;
         int snake_length;
         float snake_speed;
         Direction direction = Direction::None;

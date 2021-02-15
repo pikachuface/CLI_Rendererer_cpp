@@ -8,7 +8,7 @@ namespace SnakeGame
     public:
         bool filled = false;
         SnakeNode(const int &pos_x, const int &pos_y)
-            : RenderableObject(pos_x, pos_x, Colors::YELLOW_BKG) {}
+            : RenderableObject(pos_x, pos_y, Colors::YELLOW_BKG,Colors::BLACK_TXT, ' ', ' ') {}
 
         bool operator==(const SnakeNode &second)
         {

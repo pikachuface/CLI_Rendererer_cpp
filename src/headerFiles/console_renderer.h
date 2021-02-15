@@ -30,9 +30,7 @@ namespace ConsoleRenderer
                  const size_t &text_lines,
                  const size_t &border_thicknes, const Colors &border_color);
         ~Renderer();
-        void AddToRenderQueue(const RenderableObject *to_render);
         const bool TryAddToRenderQueue(const RenderableObject *to_render);
-        void AddToDeleteQueue(const int &pos_x, const int &pos_y);
         const bool TryAddToDeleteQueue(const int &pos_x, const int &pos_y);
         const bool TryAddTextBox(const std::string &name,
                                  const std::string &label,

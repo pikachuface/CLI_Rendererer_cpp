@@ -33,6 +33,10 @@ namespace ConsoleRenderer
         {
             delete delete_queue[i];
         }
+        for (size_t i = 0; i < render_queue.size(); i++)
+        {
+            delete render_queue[i];
+        }
         for (size_t i = 0; i < text_boxes.size(); i++)
         {
             delete text_boxes[i];
@@ -43,7 +47,7 @@ namespace ConsoleRenderer
     void Renderer::Init(void)
     {
         ConsoleRenderer::AnsiEscapes::ClearScreen();
-        //ClearCanvas();
+        ClearCanvas();
         ShowBorder();
         std::map<std::string, int>::iterator it;
         for (it = text_box_finder.begin(); it != text_box_finder.end(); it++)
@@ -64,9 +68,10 @@ namespace ConsoleRenderer
             AnsiEscapes::MoveCursorTo(offset_y + y, offset_x);
             for (int x = 1; x <= canvas_width; x++)
             {
-                printf("  ");
+                printf("##");
             }
         }
+        AnsiEscapes::MoveCursorTo(text_lines + border_thicknes * 2 + canvas_height + 1, 0);
     }
 
     void Renderer::ShowBorder(void)
@@ -82,7 +87,7 @@ namespace ConsoleRenderer
             }
         }
         offset_y += border_thicknes;
-        for (int y = 0; y < canvas_height; y++)
+        for (int y = 0; y <= canvas_height; y++)
         {
             AnsiEscapes::MoveCursorTo(offset_y + y, 1);
             for (int x = 0; x < border_thicknes; x++)
@@ -104,6 +109,7 @@ namespace ConsoleRenderer
                 printf("%c%c", ' ', ' ');
             }
         }
+        AnsiEscapes::MoveCursorTo(text_lines + border_thicknes * 2 + canvas_height + 1, 0);
     }
 
     void Renderer::Render(void)
@@ -117,7 +123,7 @@ namespace ConsoleRenderer
         for (int i = 0; i < render_queue.size(); i++)
         {
             DrawPixel(*render_queue[i]);
-            //delete render_queue[i];
+            delete render_queue[i];
         }
         render_queue.clear();
     }
@@ -128,13 +134,15 @@ namespace ConsoleRenderer
         AnsiEscapes::SetBackgroundColorBright(to_render.bkg_color);
         AnsiEscapes::SetTextColor(to_render.txt_color);
         printf("%c%c", to_render.block_texture[0], to_render.block_texture[1]);
+        AnsiEscapes::MoveCursorTo(text_lines + border_thicknes * 2 + canvas_height + 1, 0);
     }
 
     void Renderer::ClearPixel(const Position &to_delete)
     {
-        AnsiEscapes::SetBackgroundColor(Colors::RESET_COLOR);
-        AnsiEscapes::MoveCursorTo(text_lines + border_thicknes + to_delete.y, (border_thicknes + to_delete.y) * 2 - 1);
+        AnsiEscapes::SetBackgroundColor(Colors::BLACK_BKG);
+        AnsiEscapes::MoveCursorTo(text_lines + border_thicknes + to_delete.y, (border_thicknes + to_delete.x) * 2 - 1);
         printf("  ");
+        AnsiEscapes::MoveCursorTo(text_lines + border_thicknes * 2 + canvas_height + 1, 0);
     }
 
     const bool Renderer::TryRenderTextBox(const std::string &name)
@@ -142,16 +150,16 @@ namespace ConsoleRenderer
         if (text_box_finder.count(name) > 0)
         {
             AnsiEscapes::SetBackgroundColor(Colors::RESET_COLOR);
-            AnsiEscapes::MoveCursorTo(text_box_finder[name]+1, 1);
+            AnsiEscapes::MoveCursorTo(text_box_finder[name] + 1, 1);
             AnsiEscapes::ClearLineToRight();
 
             TextBox *txt_box = text_boxes[text_box_finder[name]];
 
             int white_spaces = (border_thicknes * 2 + canvas_width) * 2 - (txt_box->label.length() + txt_box->text.length());
             if (white_spaces > 0 && txt_box->conetered)
-                AnsiEscapes::MoveCursorTo(text_box_finder[name]+1, white_spaces / 2 + 1);
+                AnsiEscapes::MoveCursorTo(text_box_finder[name] + 1, white_spaces / 2 + 1);
             else
-                AnsiEscapes::MoveCursorTo(text_box_finder[name]+1, 1);
+                AnsiEscapes::MoveCursorTo(text_box_finder[name] + 1, 1);
 
             AnsiEscapes::SetTextColor(txt_box->label_color);
             printf("%s", txt_box->label.c_str());
@@ -163,27 +171,15 @@ namespace ConsoleRenderer
     }
 
     //Queues
-    void Renderer::AddToRenderQueue(const RenderableObject *to_render)
-    {
-        render_queue.push_back(to_render);
-    }
 
     const bool Renderer::TryAddToRenderQueue(const RenderableObject *to_render)
     {
         if (InsideCanvas(to_render->pos))
-            render_queue.push_back(to_render);
-        return true;
-    }
-
-    void Renderer::AddToDeleteQueue(const int &pos_x, const int &pos_y)
-    {
-        Position *to_delete = new Position(pos_x, pos_y);
-        if (InsideCanvas(*to_delete))
         {
-            delete_queue.push_back(to_delete);
+            render_queue.push_back(new RenderableObject(*to_render));
+            return true;
         }
-        else
-            delete to_delete;
+        return false;
     }
 
     const bool Renderer::TryAddToDeleteQueue(const int &pos_x, const int &pos_y)

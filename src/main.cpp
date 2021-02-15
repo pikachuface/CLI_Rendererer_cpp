@@ -18,7 +18,30 @@ int main()
 {
     Setup();
     SnakeGame::SnakeGame game(speed, map_loops, height, width);
-    AnsiEscapes::MoveCursorTo(40,5);
+    while (true)
+    {
+        char input = Input::Get();
+        switch (toupper(input))
+        {
+        case 'A':
+            game.ChangeDirection(game.Left);
+            break;
+        case 'D':
+            game.ChangeDirection(game.Right);
+            break;
+        case 'W':
+            game.ChangeDirection(game.Up);
+            break;
+        case 'S':
+            game.ChangeDirection(game.Down);
+            break;
+        }
+
+        if (game.Move())
+            break;
+    }
+
+    AnsiEscapes::MoveCursorTo(40, 5);
     return 0;
 }
 
