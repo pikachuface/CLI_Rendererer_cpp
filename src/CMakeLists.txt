@@ -14,4 +14,6 @@ source_group("Source Files" FILES ${_SRCFILES})
 source_group("Lib source" FILES ${_LIBSOURCE})
 source_group("Lib headers" FILES ${_LIBHEADERS})
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin) 
+
 add_executable(TerminalSnake ${_HDRFILES} ${_SRCFILES} ${_LIBSOURCE} ${_LIBHEADERS})
