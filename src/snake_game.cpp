@@ -1,4 +1,4 @@
-#include "headerFiles/snake_game.h"
+#include "header_files/snake_game.h"
 
 namespace SnakeGame
 {
@@ -13,18 +13,21 @@ namespace SnakeGame
         : map_height(map_height), map_width(map_width),
           map_loops(map_loops), snake_speed(snake_speed)
     {
-        this->snake_body.push_front(new SnakeNode(round(map_width / 2), round(map_height / 2)));
+        SnakeNode* head = new SnakeNode(round(map_width / 2), round(map_height / 2));
+        this->snake_body.push_front(head);
         food = new Food(this->map_height, this->map_width);
         this->food->Respawn();
-        Renderer::Init(this->map_width, this->map_height, 3,
+        renderer = new Renderer(this->map_width, this->map_height, 3,
                                 1, ConsoleRenderer::Color::YELLOW_BKG);
-        Renderer::TryAddTextBox("score", "Score: ", std::to_string(score),
+        renderer->TryAddTextBox("score", "Score: ", std::to_string(score),
                                 Color::WHITE_TXT, Color::YELLOW_TXT);
-        Renderer::TryAddTextBox("speed", "Speed: ", std::to_string(snake_speed),
+        renderer->TryAddTextBox("speed", "Speed: ", std::to_string(snake_speed),
                                 Color::WHITE_TXT, Color::BLUE_TXT);
-        Renderer::TryAddTextBox("length", "Snake length: ", std::to_string(this->snake_length),
+        renderer->TryAddTextBox("length", "Snake length: ", std::to_string(this->snake_length),
                                 Color::WHITE_TXT, Color::YELLOW_TXT);
-        Renderer::Show();
+        renderer->TryRegisterObject(head);
+        renderer->TryRegisterObject(food);
+        renderer->Show();
     }
 
     SnakeGame::~SnakeGame()
@@ -88,6 +91,7 @@ namespace SnakeGame
             tempNode->block_texture[0] = ' ';
             tempNode->block_texture[1] = ' ';
             tempNode = new SnakeNode(newPosX, newPosY);
+            renderer->TryRegisterObject(tempNode);
         }
         else
         {
@@ -110,7 +114,7 @@ namespace SnakeGame
             score += food->GetValue();
             food->Respawn();
 
-            Renderer::TryEditTextBox("score",std::to_string(score));
+            renderer->TryEditTextBox("score",std::to_string(score));
         }
 
         if (snake_body.size() > 1)
@@ -122,9 +126,10 @@ namespace SnakeGame
                 p_second_node->block_texture[1] = ']';
             }
             p_second_node->bkg_color = Color::GREEN_BKG;
+            renderer->TryUnregisterObject(p_second_node);
         }
 
-        Renderer::Render();
+        renderer->Render();
         return dead;
     }
 

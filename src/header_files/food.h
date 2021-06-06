@@ -1,7 +1,7 @@
 #pragma once
 #include <stdlib.h>
 #include <time.h>
-#include "renderable_object.h"
+#include "../CLI_renderer_lib/renderable_object.h"
 namespace SnakeGame
 {
     class Food : public ConsoleRenderer::RenderableObject

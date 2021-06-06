@@ -1,4 +1,4 @@
-#include "headerFiles/food.h"
+#include "header_files/food.h"
 
 namespace SnakeGame
 {
@@ -10,6 +10,7 @@ namespace SnakeGame
                                             '[', ']')
     {
         srand(time(NULL));
+        this->layer = ConsoleRenderer::Layer::Two;
         this->Respawn();
     }
 

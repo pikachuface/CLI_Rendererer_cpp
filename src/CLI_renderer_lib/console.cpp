@@ -6,7 +6,7 @@
 #include <unistd.h>
 #endif
 
-#include "headerFiles/console.h"
+#include "console.h"
 
 namespace ConsoleRenderer
 {

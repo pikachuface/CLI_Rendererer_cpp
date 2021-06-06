@@ -1,5 +1,5 @@
 #pragma once
-#include "renderable_object.h"
+#include "../CLI_renderer_lib/renderable_object.h"
 using namespace ConsoleRenderer;
 namespace SnakeGame
 {
@@ -8,7 +8,7 @@ namespace SnakeGame
     public:
         bool filled = false;
         SnakeNode(const int &pos_x, const int &pos_y)
-            : RenderableObject(pos_x, pos_y, Colors::YELLOW_BKG,Colors::BLACK_TXT, ' ', ' ') {}
+            : RenderableObject(pos_x, pos_y, Color::YELLOW_BKG,Color::BLACK_TXT, ' ', ' ') {}
 
         bool operator==(const SnakeNode &second)
         {

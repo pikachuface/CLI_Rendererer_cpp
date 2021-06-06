@@ -1,6 +1,5 @@
-#include "headerFiles/snake_game.h"
-#include "headerFiles/text_box.h"
-#include "headerFiles/input_manager.h"
+#include "header_files/snake_game.h"
+#include "header_files/input_manager.h"
 #include <iostream>
 #include <limits>
 #include <termios.h>

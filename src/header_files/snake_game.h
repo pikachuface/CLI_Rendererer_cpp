@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
 #include <queue>
-#include<cmath>
+#include <cmath>
 #include "snake_node.h"
 #include "food.h"
-#include "renderer.h"
+#include "../CLI_renderer_lib/renderer.h"
 
 namespace SnakeGame
 {
@@ -21,6 +21,8 @@ namespace SnakeGame
         };
 
     private:
+        //Renderer
+        Renderer *renderer;
         //Map variables
         uint8_t map_height = 10;
         uint8_t map_width = 10;

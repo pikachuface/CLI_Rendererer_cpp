@@ -1,4 +1,4 @@
-#include "headerFiles/renderable_object.h"
+#include "renderable_object.h"
 namespace ConsoleRenderer
 {
     RenderableObject::RenderableObject(const int &pos_x, const int &pos_y,
@@ -9,28 +9,19 @@ namespace ConsoleRenderer
     {
         this->block_texture[0] = left_char;
         this->block_texture[1] = right_char;
-        renderer->all_objects.insert(this);
     }
     RenderableObject::RenderableObject(const int &pos_x,
                                        const int &pos_y,
                                        const Color &bkg_color)
-        : pos(pos_x, pos_y), bkg_color(bkg_color)
-    {
-        bool *out;
-        renderer->all_objects.insert(this);
-    }
+        : pos(pos_x, pos_y), bkg_color(bkg_color){}
 
-    RenderableObject::~RenderableObject(void)
-    {
-        renderer->all_objects.erase(this);
-    }
 
-    const bool RenderableObject::MoveTo(const int &x, const int &y)
+    void RenderableObject::MoveTo(const int &x, const int &y)
     {
         this->pos.x = x;
         this->pos.y = y;
     }
-    const bool RenderableObject::MoveBy(const int &x, const int &y)
+    void RenderableObject::MoveBy(const int &x, const int &y)
     {
         this->pos.x += x;
         this->pos.y += y;

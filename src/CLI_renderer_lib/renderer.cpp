@@ -1,12 +1,13 @@
 #include <assert.h>
 #include <cmath>
 #include <cstring>
-#include "headerFiles/renderer.h"
+#include "renderer.h"
 
 namespace ConsoleRenderer
 {
+
     //(Con/De)structors
-    void Renderer::Init(const uint8_t &p_canvas_width,
+    Renderer::Renderer(const uint8_t &p_canvas_width,
                         const uint8_t &p_canvas_height,
                         const uint8_t &p_text_lines)
     {
@@ -18,7 +19,7 @@ namespace ConsoleRenderer
         Console::SetupConsole();
     }
 
-    void Renderer::Init(const uint8_t &p_canvas_width,
+    Renderer::Renderer(const uint8_t &p_canvas_width,
                         const uint8_t &p_canvas_height,
                         const uint8_t &p_text_lines,
                         const uint8_t &p_border_thicknes,
@@ -121,14 +122,14 @@ namespace ConsoleRenderer
     {
         for (auto object : all_objects)
         {
-            if (InsideCanvas(object->pos))
+            if (!InsideCanvas(object->pos))
                 continue;
-            if (buffer.count(object->pos) != 0)
+            if (buffer.count(&object->pos) != 0)
             {
-                if (buffer[object->pos]->layer >= object->layer)
-                    buffer[object->pos] = object;
+                if (buffer[&object->pos]->layer >= object->layer)
+                    buffer[&object->pos] = object;
             }
-            buffer[object->pos] = object;
+            buffer[&object->pos] = object;
         }
         ClearCanvas();
         for (auto to_render : buffer)
@@ -170,6 +171,30 @@ namespace ConsoleRenderer
         printf("%s", txt_box->label.c_str());
         Console::SetTextColor(txt_box->text_color);
         printf("%s", txt_box->text.c_str());
+    }
+
+    //Objects
+    const bool Renderer::IsRegistered(RenderableObject *object)
+    {
+        if (all_objects.count(object) == 1)
+            return true;
+        return false;
+    }
+
+    const bool Renderer::TryRegisterObject(RenderableObject *object)
+    {
+        if(IsRegistered(object))
+            return false;
+        all_objects.insert(object);
+        return true;
+    }
+
+    const bool Renderer::TryUnregisterObject(RenderableObject *object)
+    {
+        if(!IsRegistered(object))
+            return false;
+        all_objects.erase(object);
+        return true;
     }
 
     //TextBoxes
@@ -259,5 +284,4 @@ namespace ConsoleRenderer
 
         return true;
     }
-
-} // namespace ConsoleRenderer
+}
