@@ -1,14 +1,13 @@
-/*You can find this code at: 
-  https://github.com/sol-prog/ansi-escape-codes-windows-posix-terminals-c-programming-examples
-*/
 #pragma once
 
 #include <stdio.h>
 
 namespace ConsoleRenderer
 {
-
-    enum Colors
+#ifdef _WIN32
+//TODO: Windows implementation
+#else
+    enum Color
     {
         RESET_COLOR,
         BLACK_TXT = 30,
@@ -36,8 +35,8 @@ namespace ConsoleRenderer
         CLEAR_FROM_CURSOR_TO_BEGIN,
         CLEAR_ALL
     };
-
-    class AnsiEscapes
+    
+    class Console
     {
     public:
         static void SetupConsole(void);
@@ -134,4 +133,6 @@ namespace ConsoleRenderer
             printf("\x1b%d", 8);
         }
     };
+
+#endif
 } // namespace ConsoleRenderer

@@ -1,14 +1,14 @@
 #pragma once
 #include <string>
-#include "ansi_escapes.h"
+#include "console.h"
 namespace ConsoleRenderer
 {
     class TextBox
     {
 
     public:
-        Colors label_color = Colors::WHITE_TXT;
-        Colors text_color = Colors::WHITE_TXT;
+        Color label_color = Color::WHITE_TXT;
+        Color text_color = Color::WHITE_TXT;
         std::string label;
         std::string text;
         bool conetered = false;
@@ -17,7 +17,7 @@ namespace ConsoleRenderer
         TextBox(const std::string &label, const std::string &text);
 
         TextBox(const std::string &label, const std::string &text,
-                const Colors &label_color, const Colors &text_color);
+                const Color &label_color, const Color &text_color);
     };
 
 } // namespace ConsoleRenderer

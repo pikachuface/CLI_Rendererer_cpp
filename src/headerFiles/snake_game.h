@@ -1,9 +1,10 @@
 #pragma once
 #include <vector>
 #include <queue>
+#include<cmath>
 #include "snake_node.h"
 #include "food.h"
-#include "console_renderer.h"
+#include "renderer.h"
 
 namespace SnakeGame
 {
@@ -21,8 +22,8 @@ namespace SnakeGame
 
     private:
         //Map variables
-        int map_height = 10;
-        int map_width = 10;
+        uint8_t map_height = 10;
+        uint8_t map_width = 10;
         bool map_loops = true;
         //Snake variables
         std::deque<SnakeNode *> snake_body;
@@ -33,8 +34,6 @@ namespace SnakeGame
         Food *food;
         //Game
         int score = 0;
-        //Renderer
-        ConsoleRenderer::Renderer *renderer;
 
     public:
         //Getters

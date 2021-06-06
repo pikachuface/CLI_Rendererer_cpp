@@ -1,6 +1,3 @@
-/*You can find this code at: 
-  https://github.com/sol-prog/ansi-escape-codes-windows-posix-terminals-c-programming-examples
-*/
 #ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <windows.h>
@@ -9,15 +6,13 @@
 #include <unistd.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "headerFiles/ansi_escapes.h"
+#include "headerFiles/console.h"
 
 namespace ConsoleRenderer
 {
 
 
-#ifdef _WIN32
+#ifdef _WIN32 //TODO: custom windows implemenatition
 // Some old MinGW/CYGWIN distributions don't define this:
 #ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
 #define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
@@ -73,7 +68,7 @@ namespace ConsoleRenderer
     static struct termios orig_term;
     static struct termios new_term;
 
-    void AnsiEscapes::SetupConsole(void)
+    void Console::SetupConsole(void)
     {
         tcgetattr(STDIN_FILENO, &orig_term);
         new_term = orig_term;
@@ -83,7 +78,7 @@ namespace ConsoleRenderer
         tcsetattr(STDIN_FILENO, TCSANOW, &new_term);
     }
 
-    void AnsiEscapes::RestoreConsole(void)
+    void Console::RestoreConsole(void)
     {
         // Reset colors
         printf("\x1b[0m");
@@ -93,7 +88,7 @@ namespace ConsoleRenderer
     }
 #endif
 
-    void AnsiEscapes::GetCursorPosition(int *row, int *col)
+    void Console::GetCursorPosition(int *row, int *col)
     {
         printf("\x1b[6n");
         char buff[128];

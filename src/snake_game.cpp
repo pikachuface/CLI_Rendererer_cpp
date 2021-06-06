@@ -16,17 +16,15 @@ namespace SnakeGame
         this->snake_body.push_front(new SnakeNode(round(map_width / 2), round(map_height / 2)));
         food = new Food(this->map_height, this->map_width);
         this->food->Respawn();
-        renderer = new Renderer(this->map_width, this->map_height, 3,
-                                1, ConsoleRenderer::Colors::YELLOW_BKG);
-        renderer->TryAddTextBox("score", "Score: ", std::to_string(score),
-                                Colors::WHITE_TXT, Colors::YELLOW_TXT);
-        renderer->TryAddTextBox("speed", "Speed: ", std::to_string(snake_speed),
-                                Colors::WHITE_TXT, Colors::BLUE_TXT);
-        renderer->TryAddTextBox("length", "Snake length: ", std::to_string(this->snake_length),
-                                Colors::WHITE_TXT, Colors::YELLOW_TXT);
-        renderer->TryAddToRenderQueue(snake_body[0]);
-        renderer->TryAddToRenderQueue(food);
-        renderer->Init();
+        Renderer::Init(this->map_width, this->map_height, 3,
+                                1, ConsoleRenderer::Color::YELLOW_BKG);
+        Renderer::TryAddTextBox("score", "Score: ", std::to_string(score),
+                                Color::WHITE_TXT, Color::YELLOW_TXT);
+        Renderer::TryAddTextBox("speed", "Speed: ", std::to_string(snake_speed),
+                                Color::WHITE_TXT, Color::BLUE_TXT);
+        Renderer::TryAddTextBox("length", "Snake length: ", std::to_string(this->snake_length),
+                                Color::WHITE_TXT, Color::YELLOW_TXT);
+        Renderer::Show();
     }
 
     SnakeGame::~SnakeGame()
@@ -34,7 +32,6 @@ namespace SnakeGame
         for (int i = 0; i < snake_body.size(); i++)
             delete snake_body[i];
         delete food;
-        delete renderer;
     }
 
     void SnakeGame::ChangeDirection(const Direction &new_direction)
@@ -90,18 +87,15 @@ namespace SnakeGame
             tempNode->filled = false;
             tempNode->block_texture[0] = ' ';
             tempNode->block_texture[1] = ' ';
-            renderer->TryAddToRenderQueue(tempNode);
             tempNode = new SnakeNode(newPosX, newPosY);
         }
         else
         {
-            renderer->TryAddToDeleteQueue(tempNode->pos.x, tempNode->pos.y);
             snake_body.pop_back();
             tempNode->pos.x = newPosX;
             tempNode->pos.y = newPosY;
         }
-        tempNode->bkg_color = Colors::YELLOW_BKG;
-        renderer->TryAddToRenderQueue(tempNode);
+        tempNode->bkg_color = Color::YELLOW_BKG;
         snake_body.push_front(tempNode);
 
         for (int i = 1; i < snake_body.size(); i++)
@@ -116,8 +110,7 @@ namespace SnakeGame
             score += food->GetValue();
             food->Respawn();
 
-            renderer->GetTextBox("score")->text = std::to_string(score);
-            renderer->TryRenderTextBox("score");
+            Renderer::TryEditTextBox("score",std::to_string(score));
         }
 
         if (snake_body.size() > 1)
@@ -128,12 +121,10 @@ namespace SnakeGame
                 p_second_node->block_texture[0] = '[';
                 p_second_node->block_texture[1] = ']';
             }
-            p_second_node->bkg_color = Colors::GREEN_BKG;
-            renderer->TryAddToRenderQueue(p_second_node);
+            p_second_node->bkg_color = Color::GREEN_BKG;
         }
 
-        renderer->TryAddToRenderQueue(food);
-        renderer->Render();
+        Renderer::Render();
         return dead;
     }
 

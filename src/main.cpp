@@ -41,7 +41,7 @@ int main()
             break;
     }
 
-    AnsiEscapes::MoveCursorTo(40, 5);
+    Console::MoveCursorTo(40, 5);
     return 0;
 }
 
@@ -50,8 +50,8 @@ void Setup(void)
 
     while (true)
     {
-        ConsoleRenderer::AnsiEscapes::ClearScreen();
-        ConsoleRenderer::AnsiEscapes::MoveCursorTo(1, 1);
+        ConsoleRenderer::Console::ClearScreen();
+        ConsoleRenderer::Console::MoveCursorTo(1, 1);
 
         std::cout << "Snake Game" << std::endl;
         if (width < 5)
@@ -81,8 +81,8 @@ void Setup(void)
         char input;
         while (true)
         {
-            ConsoleRenderer::AnsiEscapes::ClearScreen();
-            ConsoleRenderer::AnsiEscapes::MoveCursorTo(1, 1);
+            ConsoleRenderer::Console::ClearScreen();
+            ConsoleRenderer::Console::MoveCursorTo(1, 1);
             std::cout << "Should snake loop:\nY) Yes\nN) No" << std::endl;
             input = toupper(Input::Get());
             if (input == 'Y')

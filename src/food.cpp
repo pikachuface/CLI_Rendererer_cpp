@@ -5,8 +5,8 @@ namespace SnakeGame
     Food::Food(const int &map_width, const int &map_height)
         : map_width(map_width), map_height(map_height),
           ConsoleRenderer::RenderableObject(0, 0,
-                                            ConsoleRenderer::Colors::RED_BKG,
-                                            ConsoleRenderer::Colors::BLACK_TXT,
+                                            ConsoleRenderer::Color::RED_BKG,
+                                            ConsoleRenderer::Color::BLACK_TXT,
                                             '[', ']')
     {
         srand(time(NULL));
