@@ -2,6 +2,7 @@
 
 namespace SnakeGame
 {
+    const bool SnakeGame::IsGameOver() { return this->game_over; }
     const int SnakeGame::GetScore() { return this->score; }
     const int SnakeGame::GetMapHeight() { return this->map_height; }
     const int SnakeGame::GetMapWidth() { return this->map_width; }
@@ -13,7 +14,7 @@ namespace SnakeGame
         : map_height(map_height), map_width(map_width),
           map_loops(map_loops), snake_speed(snake_speed)
     {
-        SnakeNode* head = new SnakeNode(round(map_width / 2), round(map_height / 2));
+        SnakeNode *head = new SnakeNode(round(map_width / 2), round(map_height / 2));
         this->snake_body.push_front(head);
         food = new Food(this->map_height, this->map_width);
         this->food->Respawn();
@@ -43,10 +44,12 @@ namespace SnakeGame
             this->direction = new_direction;
     }
 
-    const bool SnakeGame::Move()
+    void SnakeGame::Move()
     {
+        if(game_over)
+            return;
+
         bool outside_map = false;
-        bool dead = false;
 
         int newPosX = snake_body[0]->pos.x;
         int newPosY = snake_body[0]->pos.y;
@@ -82,7 +85,7 @@ namespace SnakeGame
         }
 
         if (outside_map && !map_loops)
-            dead = true;
+            game_over = true;
 
         SnakeNode *tempNode = snake_body.back();
         if (tempNode->filled)
@@ -105,7 +108,7 @@ namespace SnakeGame
         for (int i = 1; i < snake_body.size(); i++)
         {
             if (&snake_body[0] == &snake_body[i])
-                dead = true;
+                game_over = true;
         }
 
         if (food->pos.x == snake_body.front()->pos.x && food->pos.y == snake_body.front()->pos.y)
@@ -114,7 +117,7 @@ namespace SnakeGame
             score += food->GetValue();
             food->Respawn();
 
-            renderer->TryEditTextBox("score",std::to_string(score));
+            renderer->TryEditTextBox("score", std::to_string(score));
         }
 
         if (snake_body.size() > 1)
@@ -126,11 +129,10 @@ namespace SnakeGame
                 p_second_node->block_texture[1] = ']';
             }
             p_second_node->bkg_color = Color::GREEN_BKG;
-            renderer->TryUnregisterObject(p_second_node);
+            renderer->TryRegisterObject(p_second_node);
         }
 
-        renderer->Render();
-        return dead;
+       renderer->Render();
     }
 
 } // namespace SnakeGame

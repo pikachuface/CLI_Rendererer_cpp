@@ -10,7 +10,6 @@ namespace SnakeGame
                                             '[', ']')
     {
         srand(time(NULL));
-        this->layer = ConsoleRenderer::Layer::Two;
         this->Respawn();
     }
 

@@ -36,21 +36,22 @@ namespace SnakeGame
         Food *food;
         //Game
         int score = 0;
+        bool game_over = false;
 
     public:
         //Getters
-        const int
-        GetScore();
-        const int GetMapHeight();
-        const int GetMapWidth();
-        const int GetSnakeLength();
-        const float GetSnakeSpeed();
+        const bool IsGameOver(void);
+        const int GetScore(void);
+        const int GetMapHeight(void);
+        const int GetMapWidth(void);
+        const int GetSnakeLength(void);
+        const float GetSnakeSpeed(void);
         //Constructors | Destructors
         SnakeGame(const float &speed, const bool &map_loops,
                   const int &map_Height, const int &map_width);
         ~SnakeGame();
         //Game Methods
         void ChangeDirection(const Direction &new_direction);
-        const bool Move();
+        void Move(void);
     };
 } // namespace SnakeGame

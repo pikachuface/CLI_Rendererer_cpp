@@ -3,45 +3,69 @@
 #include <iostream>
 #include <limits>
 #include <termios.h>
+#include <pthread.h>
+#include <thread>
+#include <unistd.h>
+#include <chrono>
 
-const bool TryGetInput(int &saved_input, const int &min_value, const int &max_value = INT32_MAX);
-const bool checkInput();
+void GameLoop(void);
+void KeyRegister(void);
 void Setup(void);
+const bool checkInput();
+const bool TryGetInput(int &saved_input, const int &min_value, const int &max_value = INT32_MAX);
+
+SnakeGame::SnakeGame *game;
 
 int width = 0;
 int height = 0;
 int speed = 0;
 bool map_loops = true;
 
+std::thread key_register_t;
+std::thread game_t;
+
 int main()
 {
     Setup();
-    SnakeGame::SnakeGame game(speed, map_loops, height, width);
-    while (true)
-    {
-        char input = Input::Get();
-        switch (toupper(input))
-        {
-        case 'A':
-            game.ChangeDirection(game.Left);
-            break;
-        case 'D':
-            game.ChangeDirection(game.Right);
-            break;
-        case 'W':
-            game.ChangeDirection(game.Up);
-            break;
-        case 'S':
-            game.ChangeDirection(game.Down);
-            break;
-        }
-
-        if (game.Move())
-            break;
-    }
-
+    game = new SnakeGame::SnakeGame(speed, map_loops, height, width);
+    key_register_t = std::thread(&KeyRegister);
+    //KeyRegister();
+    game_t = std::thread(&GameLoop);
+    game_t.join();
+    key_register_t.join();
     Console::MoveCursorTo(40, 5);
     return 0;
+}
+
+void GameLoop()
+{
+    while (!game->IsGameOver())
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        game->Move();
+    }
+}
+
+void KeyRegister()
+{
+    //while (!game->IsGameOver())
+    //{
+        switch (toupper(Input::Get()))
+        {
+        case 'A':
+            game->ChangeDirection(game->Left);
+            break;
+        case 'D':
+            game->ChangeDirection(game->Right);
+            break;
+        case 'W':
+            game->ChangeDirection(game->Up);
+            break;
+        case 'S':
+            game->ChangeDirection(game->Down);
+            break;
+        }
+    //}
 }
 
 void Setup(void)

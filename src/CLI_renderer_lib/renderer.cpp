@@ -8,45 +8,25 @@ namespace ConsoleRenderer
 
     //(Con/De)structors
     Renderer::Renderer(const uint8_t &p_canvas_width,
-                        const uint8_t &p_canvas_height,
-                        const uint8_t &p_text_lines)
+                       const uint8_t &p_canvas_height,
+                       const uint8_t &p_text_lines)
+        : canvas_height(canvas_height), canvas_width(canvas_width),
+          text_lines(text_lines), text_boxes(std::vector<TextBox *>(text_lines))
     {
-        RestartRenderer();
-        canvas_width = p_canvas_width;
-        canvas_height = p_canvas_height;
-        text_lines = p_text_lines;
-        text_boxes.resize(text_lines);
         Console::SetupConsole();
     }
 
-    Renderer::Renderer(const uint8_t &p_canvas_width,
-                        const uint8_t &p_canvas_height,
-                        const uint8_t &p_text_lines,
-                        const uint8_t &p_border_thicknes,
-                        const Color &p_border_color)
+    Renderer::Renderer(const uint8_t &canvas_width,
+                       const uint8_t &canvas_height,
+                       const uint8_t &text_lines,
+                       const uint8_t &border_thicknes,
+                       const Color &border_color)
+        : canvas_height(canvas_height), canvas_width(canvas_width),
+          text_lines(text_lines), border_thicknes(border_thicknes),
+          text_boxes(std::vector<TextBox *>(text_lines)),
+          border_color(border_color)
     {
-        RestartRenderer();
-        canvas_width = p_canvas_width;
-        canvas_height = p_canvas_height;
-        text_lines = p_text_lines;
-        border_thicknes = border_thicknes;
-        border_color = border_color;
-        text_boxes.resize(text_lines);
         Console::SetupConsole();
-    }
-
-    void Renderer::RestartRenderer(void)
-    {
-        for (auto ptr_obj : all_objects)
-            delete ptr_obj;
-        for (auto ptr_txt_box : text_boxes)
-            delete ptr_txt_box;
-        text_boxes.clear();
-        all_objects.clear();
-        buffer.clear();
-        text_box_finder.clear();
-        border_color = WHITE_BKG;
-        border_thicknes = 1;
     }
 
     //Setup
@@ -122,18 +102,19 @@ namespace ConsoleRenderer
     {
         for (auto object : all_objects)
         {
-            if (!InsideCanvas(object->pos))
+            if (!InsideCanvas(object->pos) || !object->visible)
                 continue;
-            if (buffer.count(&object->pos) != 0)
-            {
-                if (buffer[&object->pos]->layer >= object->layer)
-                    buffer[&object->pos] = object;
-            }
-            buffer[&object->pos] = object;
+            buffer[object->layer][object->pos] = object;
         }
         ClearCanvas();
-        for (auto to_render : buffer)
-            DrawPixel(*to_render.second);
+        for (int i = 3; i >= 0; i--)
+        {
+            for (auto to_render : buffer[i])
+            {
+                DrawPixel(*to_render.second);
+            }
+            buffer[i].clear();
+        }
     }
 
     void Renderer::DrawPixel(const RenderableObject &to_render)
@@ -183,7 +164,7 @@ namespace ConsoleRenderer
 
     const bool Renderer::TryRegisterObject(RenderableObject *object)
     {
-        if(IsRegistered(object))
+        if (IsRegistered(object))
             return false;
         all_objects.insert(object);
         return true;
@@ -191,7 +172,7 @@ namespace ConsoleRenderer
 
     const bool Renderer::TryUnregisterObject(RenderableObject *object)
     {
-        if(!IsRegistered(object))
+        if (!IsRegistered(object))
             return false;
         all_objects.erase(object);
         return true;

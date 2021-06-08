@@ -3,6 +3,7 @@
 #include "console.h"
 #include "renderable_object.h"
 #include "text_box.h"
+#include "pos_comparator.h"
 //std libs
 #include <map>
 #include <vector>
@@ -20,11 +21,11 @@ namespace ConsoleRenderer
         uint8_t canvas_height;
         uint8_t border_thicknes;
         uint8_t text_lines;
-        Color border_color;
+        Color border_color = Color::WHITE_BKG;
         std::map<std::string, int> text_box_finder;
         std::vector<TextBox *> text_boxes;
         std::unordered_set<RenderableObject *> all_objects;
-        std::map<Position *, RenderableObject *> buffer;
+        std::array<std::map<Position, RenderableObject *, PosComparator>, 4> buffer;
 
     public:
         Renderer(const uint8_t &canvas_width, const uint8_t &canvas_height,
@@ -64,7 +65,5 @@ namespace ConsoleRenderer
         void ClearPixel(const Position &to_delete);
         void DrawPixel(const RenderableObject &to_render);
         void UpdateTextBox(const std::string &name);
-        void RestartRenderer(void);
-        void ClearBuffer(void);
     };
 } // namespace ConsoleRenderer
